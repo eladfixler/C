@@ -1,5 +1,7 @@
 //elad fixler 215200684
 #include "base.h"
+struct News* to_free[BIG_NUMBER];
+int to_free_news_counter = 0;
 struct BoundedBuffer* to_dispatcher[BIG_NUMBER];
 struct UnBoundedBuffer* to_co_editors[3];
 struct BoundedBuffer* to_screen_manger;
@@ -21,6 +23,7 @@ void* producer(void* arg) {
     }
     //printf("all sent\n");
     struct News* lastNew = malloc(sizeof(struct News));
+    to_free[to_free_news_counter++] = lastNew;
     lastNew->type = 4;
     lastNew->producer_number = p->number;
     lastNew->number_of_news = 1;
@@ -83,9 +86,14 @@ void* screen_manger(void* arg) {
                 counter++;
                 continue;
             } else {
-                printf("%s\n", to_srtring(news));
+                char* s = to_srtring(news);
+                printf("%s\n", s);
+                free(s);
             }
         }
+    }
+    for (int i = 0; i < to_free_news_counter; i++) {
+        free(to_free[i]);
     }
 }
 
@@ -172,4 +180,21 @@ int main(int argc, char *argv[]) {
     pthread_t screen_manger_thread;
     pthread_create(&screen_manger_thread, NULL, screen_manger, NULL);
     pthread_join(screen_manger_thread, NULL);
+    free(producers);
+    for (int i = 0; i < BIG_NUMBER; i++) {
+        if (to_dispatcher[i] != NULL) {
+            destroyB(to_dispatcher[i]);
+            free(to_dispatcher[i]);
+        }
+    }
+
+    destroyU(to_co_editors[0]);
+    free(to_co_editors[0]);
+    destroyU(to_co_editors[1]);
+    free(to_co_editors[1]);
+    destroyU(to_co_editors[2]);
+    free(to_co_editors[2]);
+
+    destroyB(to_screen_manger);
+    free(to_screen_manger);
 }

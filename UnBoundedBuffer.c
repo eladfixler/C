@@ -16,7 +16,6 @@ struct UnBoundedBuffer* new_unBoundedBuffer() {
 void insertU(struct UnBoundedBuffer* unBoundedBuffer , struct News s) {
     sem_wait(&unBoundedBuffer->semaphore);
     if (unBoundedBuffer->head == NULL) {
-        unBoundedBuffer->head = malloc(sizeof(struct Node));
         unBoundedBuffer->head = new_node(s);
         sem_post(&unBoundedBuffer->semaphore);
         return;
@@ -25,7 +24,6 @@ void insertU(struct UnBoundedBuffer* unBoundedBuffer , struct News s) {
     while (node->next != NULL) {
         node = node->next;
     }
-    node->next = malloc(sizeof(struct Node));
     node->next = new_node(s);
     sem_post(&unBoundedBuffer->semaphore);
 }
