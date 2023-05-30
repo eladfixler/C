@@ -1,3 +1,4 @@
+//elad fixler 215200684
 #include"base.h"
 struct Node* new_node(struct News news) {
     struct Node* ret;

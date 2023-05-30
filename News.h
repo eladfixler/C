@@ -1,3 +1,4 @@
+//elad fixler 215200684
 #ifndef N_H
 #define N_H
 struct News
