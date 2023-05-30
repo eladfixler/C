@@ -13,7 +13,7 @@ char* to_srtring(struct News news) {
     char *ret = malloc(MAX_LENGHT * sizeof(char)); 
     strcpy(ret, "producer ");
     char numbers[20];
-    sprintf(numbers, "%d", news.producer_number);
+    sprintf(numbers, "%d", news.producer_number - 1);
         strcat(ret, numbers);
                 switch (news.type)
                 {
