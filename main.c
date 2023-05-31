@@ -1,5 +1,6 @@
 //elad fixler 215200684
 #include "base.h"
+struct News* lastNew;
 struct News* to_free[BIG_NUMBER];
 int to_free_news_counter = 0;
 struct BoundedBuffer* to_dispatcher[BIG_NUMBER];
@@ -16,11 +17,6 @@ void* producer(void* arg) {
         //printf("send from producer %d to dispacher\n", p->number);
     }
     //printf("all sent\n");
-    struct News* lastNew = malloc(sizeof(struct News));
-    to_free[to_free_news_counter++] = lastNew;
-    lastNew->type = 4;
-    lastNew->producer_number = p->number;
-    lastNew->number_of_news = 1;
     insertB(to_dispatcher[p->number - 1], *lastNew);
     //printf("sent last\n");
 }
@@ -71,7 +67,7 @@ void* co_editor(void* args) {
 }
 void* screen_manger(void* arg) {
     //sleep(20);
-    //printf("new screen manager\n");
+    //printf("new screen manager\n");struct News* create_news(struct Producer* p);
     int counter = 0;
     while(counter != 3) {
         if(!is_emptyB(to_screen_manger)) {
@@ -145,6 +141,10 @@ int main(int argc, char *argv[]) {
             producers[(i+1)/4 - 1] = p;
         }
     }
+    lastNew = malloc(sizeof(struct News));
+    lastNew->type = 4;
+    lastNew->producer_number = 1110101010101;
+    lastNew->number_of_news = 111001010101011;
     for (int i = 0; i < num_of_producers; i++) {
         //printf("producer number %d with buffer long %d and num of news %d\n", producers[i].number, producers[i].buffer_size, producers[i].num_of_products);
     }
@@ -194,5 +194,6 @@ int main(int argc, char *argv[]) {
 
     destroyB(to_screen_manger);
     free(to_screen_manger);
+    free(lastNew);
     printf("DONE");
 }
