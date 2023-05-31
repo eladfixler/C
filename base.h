@@ -20,5 +20,6 @@
 #include <unistd.h>
 #include"UnBoundedBuffer.h"
 #include <pthread.h>
+#include"Producer.h"
 
 #endif

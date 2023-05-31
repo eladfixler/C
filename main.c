@@ -6,19 +6,13 @@ struct BoundedBuffer* to_dispatcher[BIG_NUMBER];
 struct UnBoundedBuffer* to_co_editors[3];
 struct BoundedBuffer* to_screen_manger;
 int num_of_producers = 0;
-typedef struct
-{
-    int number;
-    int num_of_products;
-    int buffer_size;
-}Producer;
 
 void* producer(void* arg) {
-    Producer* p = (Producer*) arg;
+    struct Producer* p = (struct Producer*) arg;
     //printf("new producer number %d\n", p->number);
     for(int i = 0; i < p->num_of_products; i++) {
         usleep(rand() % 10000);
-        insertB(to_dispatcher[p->number - 1], *create_news(p->number));
+        insertB(to_dispatcher[p->number - 1], *create_news(p->number, &p->num_of_type));
         //printf("send from producer %d to dispacher\n", p->number);
     }
     //printf("all sent\n");
@@ -124,7 +118,7 @@ int main(int argc, char *argv[]) {
     }
     num_of_producers = ((lineCount -1)/ 4);
     //printf("num of producers: %d\n", num_of_producers);
-    Producer* producers = malloc(num_of_producers * sizeof(Producer));
+    struct Producer* producers = malloc(num_of_producers * sizeof(struct Producer));
     // Reset the file pointer to the beginning of the file
     fseek(file, 0, SEEK_SET);
     int a = 0,b = 0,c = 0;
@@ -138,10 +132,13 @@ int main(int argc, char *argv[]) {
         } else if (c == 0) {
             sscanf(line, "%d", &c);            
         } else {
-            Producer p;
+            struct Producer p;
             p.number = a;
             p.num_of_products =b;
             p.buffer_size = c;
+            p.num_of_type[0] = 0;
+            p.num_of_type[1] = 0;
+            p.num_of_type[2] = 0;
             a = 0;
             b = 0;
             c = 0;
@@ -197,4 +194,5 @@ int main(int argc, char *argv[]) {
 
     destroyB(to_screen_manger);
     free(to_screen_manger);
+    printf("DONE");
 }

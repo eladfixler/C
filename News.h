@@ -7,6 +7,6 @@ struct News
     int type;
     int number_of_news;
 };
-struct News* create_news(int producer_number);
+struct News* create_news(int producer_number, int* number_of_types);
 char* to_srtring(struct News);
 #endif
